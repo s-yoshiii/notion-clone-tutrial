@@ -4,8 +4,9 @@ const CreptJS = require("crypto-js");
 const JWT = require("jsonwebtoken");
 const User = require("./src/v1/models/user");
 const app = express();
-const PORT = 8000;
+const PORT = 8080;
 require("dotenv").config();
+app.use(express.json());
 // DB接続
 try {
   mongoose.connect(process.env.MONGODB_URL);
@@ -29,6 +30,7 @@ app.post("/resister", async (req, res) => {
       expiresIn: "24h",
     });
     return res.status(200).json({ user, token });
+    console.log({ user, json });
   } catch (err) {
     return res.status(500).json(err);
   }
