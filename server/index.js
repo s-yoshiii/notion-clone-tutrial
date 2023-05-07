@@ -28,6 +28,13 @@ app.post(
   body("confirmPassword")
     .isLength({ min: 8 })
     .withMessage("確認用パスワードは8文字以上です。"),
+  body("username").custom((value) => {
+    return User.findOne({ username: value }).then((user) => {
+      if (user) {
+        return Promise.reject("このユーザーはすでに使われています。");
+      }
+    });
+  }),
   async (req, res) => {
     // パスワードの受け取り
     const password = req.body.password;
