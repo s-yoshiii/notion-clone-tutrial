@@ -19,3 +19,22 @@ exports.resister = async (req, res) => {
     return res.status(500).json(err);
   }
 };
+
+exports.login = (req, res) => {
+  const { username, password } = req.body;
+  try {
+    // DBからユーザーが存在するか探してくる
+    const user = await User.findOne({username: username})
+    if (!user) {
+      res.status(401).json({
+        errors: {
+          param: "username",
+          message: "ユーザー名が無効です"
+        }
+      })
+    }
+    // パスワードを照合する
+  } catch(err) {
+    return res.status(500).json(err);
+  }
+};

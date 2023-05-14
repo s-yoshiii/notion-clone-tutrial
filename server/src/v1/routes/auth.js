@@ -28,4 +28,16 @@ router.post(
   userController.resister
 );
 
+// ログイン用API
+router.post(
+  "/login",
+  body("username")
+    .isLength({ min: 8 })
+    .withMessage("ユーザー名は8文字以上です。"),
+  body("password")
+    .isLength({ min: 8 })
+    .withMessage("パスワードは8文字以上です。"),
+  validation.validate
+);
+
 module.exports = router;
