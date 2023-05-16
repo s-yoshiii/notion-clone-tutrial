@@ -20,21 +20,39 @@ exports.resister = async (req, res) => {
   }
 };
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
   const { username, password } = req.body;
   try {
     // DBからユーザーが存在するか探してくる
-    const user = await User.findOne({username: username})
+    const user = await User.findOne({ username: username });
     if (!user) {
-      res.status(401).json({
+      return res.status(401).json({
         errors: {
           param: "username",
-          message: "ユーザー名が無効です"
-        }
-      })
+          message: "ユーザー名が無効です",
+        },
+      });
     }
     // パスワードを照合する
-  } catch(err) {
+    const descryPassword = CryptoJS.AES.decrypt(
+      user.password,
+      process.env.SECRET_KEY
+    ).toString(CryptoJS.enc.Utf8);
+    if (descryPassword !== password) {
+      return res.status(401).json({
+        errors: {
+          param: "password",
+          message: "パスワードが無効です",
+        },
+      });
+    }
+    // JWTを発行
+    const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+      expiresIn: "24h",
+    });
+
+    return res.status(20);
+  } catch (err) {
     return res.status(500).json(err);
   }
 };
