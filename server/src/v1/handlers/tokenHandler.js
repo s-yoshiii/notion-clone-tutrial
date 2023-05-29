@@ -18,17 +18,17 @@ const tokenDecode = (req) => {
 };
 
 // JWT認証を検証するためのミドルウェア
-exports.verifyToken = (req, res, next) => {
+exports.verifyToken = async (req, res, next) => {
   const tokenDecoded = tokenDecode(req);
   if (tokenDecoded) {
     // そのJWTと一致するユーザーを探してくる
     const user = await User.findById(tokenDecoded.id);
-    if(!user) {
+    if (!user) {
       return res.status(401).json("権限がありません");
     }
     req.user = user;
     next();
   } else {
-    return res.status(401).json("権限がありません")
+    return res.status(401).json("権限がありません");
   }
 };
