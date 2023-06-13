@@ -1,7 +1,7 @@
 import React from "react";
 
 const Resister = () => {
-  return <div></div>;
+  return <div>register</div>;
 };
 
 export default Resister;
